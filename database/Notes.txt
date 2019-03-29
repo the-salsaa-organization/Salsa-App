@@ -1,0 +1,24 @@
+Database:
+
+Recipe Table
+  Recipe ID
+  Name of Recipe
+  Excerpt
+  Featured Image
+  Instructions: text
+  Similar Recipes: Select or Automated?
+  How Spicy
+  Category
+  Mastermind (Author)
+  Date Published
+  Rating:
+  Number of Votes:
+  Video: URL
+  
+Ingredients Table
+  Ingredient ID
+  Ingredients
+
+Joined Table
+  Recipe ID
+  Ingredient ID
