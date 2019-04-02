@@ -5,7 +5,7 @@ Recipe Table
   Name of Recipe
   Excerpt
   Featured Image
-  Instructions: text
+  Content: (instructions, etc)
   Similar Recipes: Select or Automated?
   How Spicy
   Category

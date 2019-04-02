@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styles from './App.module.css';
 import Recipe from './Recipe.js';
 import Header from './Header.js';
+import NewRecipe from './AddRecipe/NewRecipe.js';
 
 class App extends Component {
   constructor() {
@@ -30,6 +31,7 @@ class App extends Component {
         <button onClick = {this.displayRecipe}>showRecipe</button>
         {this.state.PageType === 'Recipe' ? <Recipe/> : null}
         {this.state.PageType === 'Nothing' ? <p>fuck nick</p> : null}
+        <NewRecipe/>
       </div>
     );
   }
