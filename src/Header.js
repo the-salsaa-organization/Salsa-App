@@ -11,7 +11,8 @@ class Header extends Component {
   
   render() {
     return (
-      <div className={`${styles['Header']} ${styles[this.props.currentPage]}`}>
+      
+      <div className={`${styles.Header} ${styles[this.props.currentPage]}`}>
         <p>header</p>
       </div>
     );

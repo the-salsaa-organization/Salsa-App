@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
-// import styles from './NewRecipe.module.css';
+import styles from './NewRecipe.module.css';
+import Categories from './Categories.js';
+import Tags from './Tags.js';
+import AddCategory from './AddCategory.js';
+import AddTag from './AddTag.js'
 
 class NewRecipe extends Component {
   constructor(props) {
@@ -7,8 +11,11 @@ class NewRecipe extends Component {
     this.state = {
       recipeName: '',
       tagLine: '',
-      availableCategories: [],
+      availableCategories: ['Select Category','cat1', 'cat2', 'cat3'],
+      availableTags: ['tag1', 'tag2', 'tag3'],
       category: '',
+      tags: [],
+      newTag: '',
       heat: '1',
       yield: '',
       difficulty: '1',
@@ -22,7 +29,12 @@ class NewRecipe extends Component {
     this.yieldChange = this.yieldChange.bind(this);
     this.difficultyChange = this.difficultyChange.bind(this);
     this.prepTimeChange = this.prepTimeChange.bind(this);
+    this.selectTag = this.selectTag.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  componentDidMount() {
+    //server request to populate available categories and available tags.
   }
   
   titleChange(e) {
@@ -57,6 +69,27 @@ class NewRecipe extends Component {
     this.setState({html: e.target.value})
   }
 
+  selectTag(e) {
+    let arr = this.state.tags.slice();
+    let check = false;
+    let index
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i] === e.target.value) {
+        check = true;
+        index = i
+        break;
+      }
+    }
+    if (check) {
+      arr.splice(index, 1);
+    } else {
+      arr.push(e.target.value);
+    }
+    this.setState({
+      tags: arr
+    });
+  }
+
   handleSubmit(e) {
     console.log(this.state);
     e.preventDefault();
@@ -64,65 +97,68 @@ class NewRecipe extends Component {
 
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
-        <div>
-          Recipe Title:
-          <input type="text" value={this.state.recipeName} onChange={this.titleChange} />
-        </div>
-        <div>
-          Recipe Tagline:
-          <input type="text" value={this.state.tagLine} onChange={this.tagLineChange} />
-        </div>
-        <div>
-          Recipe Category:
-          <input type="text" value={this.state.category} onChange={this.categoryChange} />
-        </div>
-        <div>
-          Recipe Heat:
-          <select onChange = {this.heatChange}>
-            <option value = '1'>1</option>
-            <option value = '2'>2</option>
-            <option value = '3'>3</option>
-            <option value = '4'>4</option>
-            <option value = '5'>5</option>
-            <option value = '6'>6</option>
-            <option value = '7'>7</option>
-            <option value = '8'>8</option>
-            <option value = '9'>9</option>
-            <option value = '10'>10</option>
-          </select>
-        </div>
-        <div>
-          Recipe Yield (in cups):
-          <input type="number" value={this.state.yield} onChange={this.yieldChange} />
-        </div>
-        <div>
-          Recipe Difficulty:
-          <select onChange = {this.difficultyChange}>
-            <option value = '1'>1</option>
-            <option value = '2'>2</option>
-            <option value = '3'>3</option>
-            <option value = '4'>4</option>
-            <option value = '5'>5</option>
-            <option value = '6'>6</option>
-            <option value = '7'>7</option>
-            <option value = '8'>8</option>
-            <option value = '9'>9</option>
-            <option value = '10'>10</option>
-          </select>
-        </div>
-        <div>
-          Recipe Preparation Time (in minutes):
-          <input type="number" value={this.state.prepTime} onChange={this.prepTimeChange} />
-        </div>
-        <div>
-          Add HTML for Custom Area:
-          <div>
+      <div className={styles.formsWrapper}>
+        <form className={styles.createRecipeForm} onSubmit={this.handleSubmit}>
+          <h2>Add a New Recipe</h2>
+          <div className={styles.createRecipeFormSection}>
+            <label>Recipe Title:</label>
+            <input type="text" value={this.state.recipeName} onChange={this.titleChange} />
+          </div>
+          <div className={styles.createRecipeFormSection}>
+            <label>Recipe Tagline:</label>
+            <input type="text" value={this.state.tagLine} onChange={this.tagLineChange} />
+          </div>
+          <Categories categories = {this.state.availableCategories} category = {this.state.category} categoryChange = {this.categoryChange}/>
+          <Tags tags = {this.state.tags} availableTags = {this.state.availableTags} selectTag = {this.selectTag} 
+          typeTag = {this.typeTag} deleteTag = {this.deleteTag} newTag = {this.state.newTag} createTag = {this.createTag}/>
+          <div className={styles.createRecipeFormSection}>
+            <label>Recipe Heat:</label>
+            <select onChange = {this.heatChange}>
+              <option value = '1'>1</option>
+              <option value = '2'>2</option>
+              <option value = '3'>3</option>
+              <option value = '4'>4</option>
+              <option value = '5'>5</option>
+              <option value = '6'>6</option>
+              <option value = '7'>7</option>
+              <option value = '8'>8</option>
+              <option value = '9'>9</option>
+              <option value = '10'>10</option>
+            </select>
+          </div>
+          <div className={styles.createRecipeFormSection}>
+            <label>Recipe Yield (in cups):</label>
+            <input type="number" value={this.state.yield} onChange={this.yieldChange} />
+          </div>
+          <div className={styles.createRecipeFormSection}>
+            <label>Recipe Difficulty:</label>
+            <select onChange = {this.difficultyChange}>
+              <option value = '1'>1</option>
+              <option value = '2'>2</option>
+              <option value = '3'>3</option>
+              <option value = '4'>4</option>
+              <option value = '5'>5</option>
+              <option value = '6'>6</option>
+              <option value = '7'>7</option>
+              <option value = '8'>8</option>
+              <option value = '9'>9</option>
+              <option value = '10'>10</option>
+            </select>
+          </div>
+          <div className={styles.createRecipeFormSection}>
+            <label>Recipe Preparation Time (in minutes):</label>
+            <input type="number" value={this.state.prepTime} onChange={this.prepTimeChange} />
+          </div>
+          <div className={styles.createRecipeFormSection}>
+            <label>Add HTML for Custom Area:</label>
             <textarea type="text" value={this.state.html} onChange={this.htmlChange} />
           </div>
-        </div>
-        <input type="submit" value="Submit" />
-      </form>
+          <input type="submit" value="Submit" />
+        </form>
+        <AddCategory/>
+        <AddTag/>
+      </div>
+      
     );
   }
 }
