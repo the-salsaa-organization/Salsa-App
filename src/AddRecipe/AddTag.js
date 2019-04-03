@@ -14,17 +14,15 @@ class AddTag extends Component {
   }
 
   submitTag(e) {
-    //access database
+    //access database then refresh tags on NewRecipe.js
     e.preventDefault();
   }
 
   render() {
     return (
-      <form onSubmit={this.submitTag}>
-        <label>
-          Create New Tag:
+      <form className={styles.createTagForm} onSubmit={this.submitTag}>
+        <label>Create New Tag:</label>
           <input type="text" value={this.state.value} onChange={this.changeTag} />
-        </label>
         <input type="submit" value="Submit" />
       </form>
     );

@@ -14,7 +14,7 @@ class AddCategory extends Component {
   }
 
   submitCategory(e) {
-    //access database
+    //access database and refresh NewRecipe page
     e.preventDefault();
   }
 

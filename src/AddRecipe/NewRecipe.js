@@ -4,6 +4,9 @@ import Categories from './Categories.js';
 import Tags from './Tags.js';
 import AddCategory from './AddCategory.js';
 import AddTag from './AddTag.js'
+import Ingredients from './Ingredients.js';
+import AddIngredient from './AddIngredient.js';
+import AddRecipeImage from './AddRecipeImage.js';
 
 class NewRecipe extends Component {
   constructor(props) {
@@ -11,10 +14,13 @@ class NewRecipe extends Component {
     this.state = {
       recipeName: '',
       tagLine: '',
+      recipeImages: [],
+      availableIngredients: ['carrots', 'celery', 'nick\'s jizz'],
       availableCategories: ['Select Category','cat1', 'cat2', 'cat3'],
       availableTags: ['tag1', 'tag2', 'tag3'],
       category: '',
       tags: [],
+      ingredients: [],
       newTag: '',
       heat: '1',
       yield: '',
@@ -30,6 +36,8 @@ class NewRecipe extends Component {
     this.difficultyChange = this.difficultyChange.bind(this);
     this.prepTimeChange = this.prepTimeChange.bind(this);
     this.selectTag = this.selectTag.bind(this);
+    this.selectIngredient = this.selectIngredient.bind(this);
+    this.addImage = this.addImage.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -90,6 +98,33 @@ class NewRecipe extends Component {
     });
   }
 
+  selectIngredient(e) {
+    let arr = this.state.ingredients.slice();
+    let check = false;
+    let index
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i] === e.target.value) {
+        check = true;
+        index = i
+        break;
+      }
+    }
+    if (check) {
+      arr.splice(index, 1);
+    } else {
+      arr.push(e.target.value);
+    }
+    this.setState({
+      ingredients: arr
+    });
+  }
+
+  addImage(obj) {
+    console.log('this is obj: ', obj)
+    let arr = this.state.recipeImages.concat([obj]);
+    this.setState({recipeImages: arr}, console.log('this is recipeImage arr: ', this.state.recipeImages))
+  }
+
   handleSubmit(e) {
     console.log(this.state);
     e.preventDefault();
@@ -101,6 +136,9 @@ class NewRecipe extends Component {
         <form className={styles.createRecipeForm} onSubmit={this.handleSubmit}>
           <h2>Add a New Recipe</h2>
           <div className={styles.createRecipeFormSection}>
+          {this.state.recipeImages.map((image, i) => {
+            return <img key = {i} src = {image.url} alt = {image.alt}/>
+          })}
             <label>Recipe Title:</label>
             <input type="text" value={this.state.recipeName} onChange={this.titleChange} />
           </div>
@@ -108,9 +146,9 @@ class NewRecipe extends Component {
             <label>Recipe Tagline:</label>
             <input type="text" value={this.state.tagLine} onChange={this.tagLineChange} />
           </div>
+          <Ingredients availableIngredients = {this.state.availableIngredients} selectIngredient = {this.selectIngredient}/>
           <Categories categories = {this.state.availableCategories} category = {this.state.category} categoryChange = {this.categoryChange}/>
-          <Tags tags = {this.state.tags} availableTags = {this.state.availableTags} selectTag = {this.selectTag} 
-          typeTag = {this.typeTag} deleteTag = {this.deleteTag} newTag = {this.state.newTag} createTag = {this.createTag}/>
+          <Tags availableTags = {this.state.availableTags} selectTag = {this.selectTag}/>
           <div className={styles.createRecipeFormSection}>
             <label>Recipe Heat:</label>
             <select onChange = {this.heatChange}>
@@ -155,6 +193,8 @@ class NewRecipe extends Component {
           </div>
           <input type="submit" value="Submit" />
         </form>
+        <AddRecipeImage addImage = {this.addImage}/>
+        <AddIngredient/>
         <AddCategory/>
         <AddTag/>
       </div>
