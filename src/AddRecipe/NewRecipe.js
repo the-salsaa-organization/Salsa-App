@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import styles from './NewRecipe.module.css';
 import Categories from './Categories.js';
 import Tags from './Tags.js';
@@ -6,7 +7,9 @@ import AddCategory from './AddCategory.js';
 import AddTag from './AddTag.js'
 import Ingredients from './Ingredients.js';
 import AddIngredient from './AddIngredient.js';
+import AddInstruction from './AddInstruction.js';
 import AddRecipeImage from './AddRecipeImage.js';
+import AddIngredientsText from './AddIngredientsText.js'
 
 class NewRecipe extends Component {
   constructor(props) {
@@ -15,9 +18,11 @@ class NewRecipe extends Component {
       recipeName: '',
       tagLine: '',
       recipeImages: [],
-      availableIngredients: ['carrots', 'celery', 'nick\'s jizz'],
-      availableCategories: ['Select Category','cat1', 'cat2', 'cat3'],
-      availableTags: ['tag1', 'tag2', 'tag3'],
+      availableIngredients: [],
+      availableCategories: [],
+      availableTags: [],
+      instructions: [],
+      ingredientsText: [],
       category: '',
       tags: [],
       ingredients: [],
@@ -29,6 +34,9 @@ class NewRecipe extends Component {
       html: '',
     }
     this.titleChange = this.titleChange.bind(this);
+    this.refreshTags = this.refreshTags.bind(this);
+    this.refreshCategories = this.refreshCategories.bind(this);
+    this.refreshIngredients = this.refreshIngredients.bind(this);
     this.tagLineChange = this.tagLineChange.bind(this);
     this.categoryChange = this.categoryChange.bind(this);
     this.heatChange = this.heatChange.bind(this);
@@ -38,11 +46,50 @@ class NewRecipe extends Component {
     this.selectTag = this.selectTag.bind(this);
     this.selectIngredient = this.selectIngredient.bind(this);
     this.addImage = this.addImage.bind(this);
+    this.htmlChange = this.htmlChange.bind(this);
+    this.addInstruction = this.addInstruction.bind(this);
+    this.addIngredientsText = this.addIngredientsText.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidMount() {
     //server request to populate available categories and available tags.
+    this.refreshTags();
+    this.refreshCategories();
+    this.refreshIngredients();
+  }
+
+  refreshTags() {
+    axios.get('/salsa/handleTags')
+      .then((res) => {
+        this.setState({availableTags: res.data.rows})
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
+  refreshCategories() {
+    axios.get('/salsa/handleCategories')
+      .then((res) => {
+        let arr = [{category: 'Select Category'}]
+        let newArr = arr.concat(res.data.rows)
+        this.setState({availableCategories: newArr})
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
+  refreshIngredients() {
+    axios.get('/salsa/handleIngredients')
+      .then((res) => {
+        let arr = res.data.rows;
+        this.setState({availableIngredients: arr})
+      })
+      .catch((err) => {
+        console.log(err)
+      });
   }
   
   titleChange(e) {
@@ -122,7 +169,21 @@ class NewRecipe extends Component {
   addImage(obj) {
     console.log('this is obj: ', obj)
     let arr = this.state.recipeImages.concat([obj]);
-    this.setState({recipeImages: arr}, console.log('this is recipeImage arr: ', this.state.recipeImages))
+    this.setState({recipeImages: arr});
+  }
+
+  addInstruction(text) {
+    let arr = this.state.instructions.concat([text]);
+    this.setState({instructions: arr}, () => {
+      console.log(this.state.instructions);
+    });
+  }
+
+  addIngredientsText(text) {
+    let arr = this.state.ingredientsText.concat([text]);
+    this.setState({ingredientsText: arr}, () => {
+      console.log(this.state.ingredientsText);
+    })
   }
 
   handleSubmit(e) {
@@ -147,8 +208,16 @@ class NewRecipe extends Component {
             <input type="text" value={this.state.tagLine} onChange={this.tagLineChange} />
           </div>
           <Ingredients availableIngredients = {this.state.availableIngredients} selectIngredient = {this.selectIngredient}/>
+          <label>Ingredients Text:</label>
+          {this.state.ingredientsText.map((ingredient, i) => {
+            return <div className = {styles.createRecipeFormSection} key = {i}>{i + 1}: {ingredient}</div>
+          })}
           <Categories categories = {this.state.availableCategories} category = {this.state.category} categoryChange = {this.categoryChange}/>
           <Tags availableTags = {this.state.availableTags} selectTag = {this.selectTag}/>
+          <label>Instructions:</label>
+          {this.state.instructions.map((instruction, i) => {
+            return <div className = {styles.createRecipeFormSection} key = {i}>Step {i + 1}: {instruction}</div>
+          })}
           <div className={styles.createRecipeFormSection}>
             <label>Recipe Heat:</label>
             <select onChange = {this.heatChange}>
@@ -194,9 +263,11 @@ class NewRecipe extends Component {
           <input type="submit" value="Submit" />
         </form>
         <AddRecipeImage addImage = {this.addImage}/>
-        <AddIngredient/>
-        <AddCategory/>
-        <AddTag/>
+        <AddInstruction addInstruction = {this.addInstruction} />
+        <AddIngredient refreshIngredients = {this.refreshIngredients}/>
+        <AddIngredientsText addIngredientsText = {this.addIngredientsText} />
+        <AddCategory refreshCategories = {this.refreshCategories}/>
+        <AddTag refreshTags = {this.refreshTags}/>
       </div>
       
     );

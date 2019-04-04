@@ -7,7 +7,7 @@ const Categories = (props) => {
       <label htmlFor="selectCategory">Select an Existing Category:</label>
       <select id="selectCategory" onChange = {props.categoryChange} defaultValue = 'select an existing category'>
         {props.categories.map((category, i) => {
-          return <option value = {category} key = {i}>{category}</option>
+          return <option value = {category.category} key = {i}>{category.category}</option>
         })}
       </select>
     </div>

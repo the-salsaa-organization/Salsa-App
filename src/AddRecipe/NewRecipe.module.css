@@ -3,10 +3,11 @@
     flex-direction: row;
     align-items: flex-start;
     justify-content: flex-start;
+    flex-wrap: wrap;
 }
 
 .formsWrapper form {
-    width: 400px;
+    flex: 0 0 340px;
     margin: 2em 1em;
     box-shadow: 0 2px 8px 0 rgba(0,0,0,.1), 0 4px 16px 0 rgba(0,0,0,.15);
     padding: 1em;

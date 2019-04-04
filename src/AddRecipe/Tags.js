@@ -7,7 +7,7 @@ const Tags = (props) => {
         <label>Select Existing Tags:</label>
         <div className={styles.checkboxGroup}>
           {props.availableTags.map((tag, i) => {
-            return <div key = {i} className={styles.checkbox}><input id = {`tagCheckBox${i}`} type = 'checkbox' value = {tag} onChange = {props.selectTag}/><label htmlFor = {`tagCheckBox${i}`}>{tag}</label></div>
+            return <div key = {i} className={styles.checkbox}><input id = {`tagCheckBox${i}`} type = 'checkbox' value = {tag.tag} onChange = {props.selectTag}/><label htmlFor = {`tagCheckBox${i}`}>{tag.tag}</label></div>
           })}
         </div>
       </div>

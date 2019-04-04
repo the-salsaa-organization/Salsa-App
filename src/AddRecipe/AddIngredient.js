@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import axios from 'axios';
 import styles from './NewRecipe.module.css';
 
 class AddIngredient extends Component {
@@ -41,14 +42,30 @@ class AddIngredient extends Component {
 
   submitIngredient(e) {
     //access database and refresh NewRecipe page
-    console.log(this.state)
+    let data = {
+      ingredient: this.state.ingredientName,
+      url: this.state.url,
+      altTag: this.state.altTag,
+      height: this.state.height,
+      width: this.state.width
+    };
+
+    axios.post('/salsa/handleIngredients', data)
+      .then((res) => {
+        this.props.refreshIngredients();
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+
     this.setState({
       ingredientName: '',
       url: '',
       altTag: '',
       height: '',
       width: ''
-    })
+    });
+
     e.preventDefault();
   }
 

@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import axios from 'axios';
 import styles from './NewRecipe.module.css';
 
 class AddCategory extends Component {
@@ -14,7 +15,16 @@ class AddCategory extends Component {
   }
 
   submitCategory(e) {
-    //access database and refresh NewRecipe page
+    let category = this.state.value;
+    axios.post('/salsa/handleCategories', {category: category})
+      .then((res) => {
+        console.log(res);
+        this.props.refreshCategories();
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+    this.setState({value: ''})
     e.preventDefault();
   }
 

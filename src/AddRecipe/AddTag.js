@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import styles from './NewRecipe.module.css';
+import axios from 'axios';
 
 class AddTag extends Component {
   constructor(props) {
@@ -15,6 +16,16 @@ class AddTag extends Component {
 
   submitTag(e) {
     //access database then refresh tags on NewRecipe.js
+    let tag = this.state.value;
+    axios.post('/salsa/handleTags', {tag: tag})
+      .then((res) => {
+        console.log(res);
+        this.props.refreshTags();
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+    this.setState({value: ''});
     e.preventDefault();
   }
 

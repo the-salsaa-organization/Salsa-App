@@ -34,7 +34,6 @@ class AddRecipeImage extends Component {
   }
 
   submitIngredient(e) {
-    //access database and refresh NewRecipe page
     let obj = {
       url: this.state.url,
       altTag: this.state.altTag,
@@ -42,12 +41,12 @@ class AddRecipeImage extends Component {
       width: this.state.width,
     }
     this.props.addImage(obj)
-    // this.setState({
-    //   url: '',
-    //   altTag: '',
-    //   height: '',
-    //   width: ''
-    // })
+    this.setState({
+      url: '',
+      altTag: '',
+      height: '',
+      width: ''
+    })
     e.preventDefault();
   }
 
