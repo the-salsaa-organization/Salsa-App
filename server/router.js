@@ -14,6 +14,9 @@ router
   .route('/handleIngredients')
   .get(controller.getIngredients)
   .post(controller.newIngredient);
+router
+  .route('/newRecipe')
+  .post(controller.newRecipe);
 
 
 module.exports = router;

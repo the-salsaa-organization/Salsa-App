@@ -7,7 +7,7 @@ const Ingredients = (props) => {
       <label>Select Existing Ingredients:</label>
       <div className={styles.checkboxGroup}>
         {props.availableIngredients.map((ingredient, i) => {
-          return <div key = {i} className={styles.checkbox}><input id = {`ingredientCheckBox${i}`} type = 'checkbox' value = {ingredient.ingredient} onChange = {props.selectIngredient}/><label htmlFor = {`ingredientCheckBox${i}`}>{ingredient.ingredient}</label></div>
+          return <div key = {i} className={styles.checkbox}><input id = {`ingredientCheckBox${i}`} type = 'checkbox' value = {i} onChange = {props.selectIngredient}/><label htmlFor = {`ingredientCheckBox${i}`}>{ingredient.ingredient}</label></div>
         })}
       </div>
     </div>

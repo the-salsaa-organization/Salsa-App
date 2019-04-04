@@ -26,7 +26,6 @@ class NewRecipe extends Component {
       category: '',
       tags: [],
       ingredients: [],
-      newTag: '',
       heat: '1',
       yield: '',
       difficulty: '1',
@@ -101,7 +100,8 @@ class NewRecipe extends Component {
   }
 
   categoryChange(e) {
-    this.setState({category: e.target.value})
+    let category = this.state.availableCategories[e.target.value]
+    this.setState({category: category})
   }
 
   heatChange(e) {
@@ -187,7 +187,51 @@ class NewRecipe extends Component {
   }
 
   handleSubmit(e) {
-    console.log(this.state);
+    let tagsData = [];
+    let ingredientsData = []
+    this.state.tags.forEach((i) => {
+      tagsData.push(this.state.availableTags[i])
+    })
+    this.state.ingredients.forEach((i) => {
+      ingredientsData.push(this.state.availableIngredients[i])
+    })
+    let data = {
+      recipeName: this.state.recipeName,
+      tagLine: this.state.tagLine,
+      recipeImages: this.state.recipeImages,
+      instructions: this.state.instructions,
+      ingredientsText: this.state.ingredientsText,
+      category: this.state.category.category_id,
+      tags: tagsData,
+      ingredients: ingredientsData,
+      heat: this.state.heat,
+      yield: this.state.yield,
+      difficulty: this.state.difficulty,
+      prepTime: this.state.prepTime,
+      html: this.state.html,
+    }
+    axios.post('/salsa/newRecipe', data)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      // this.setState({
+      //   recipeName: '',
+      //   tagLine: '',
+      //   recipeImages: [],
+      //   instructions: [],
+      //   ingredientsText: [],
+      //   category: '',
+      //   tags: [],
+      //   ingredients: [],
+      //   heat: '1',
+      //   yield: '',
+      //   difficulty: '1',
+      //   prepTime: '',
+      //   html: '',
+      // })
     e.preventDefault();
   }
 
