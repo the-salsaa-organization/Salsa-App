@@ -1,24 +1,58 @@
 Database:
 
 Recipe Table
-  Recipe ID
-  Name of Recipe
-  Excerpt
-  Featured Image
-  Content: (instructions, etc)
-  Similar Recipes: Select or Automated?
-  How Spicy
-  Category
-  Mastermind (Author)
-  Date Published
-  Rating:
-  Number of Votes:
-  Video: URL
-  
-Ingredients Table
-  Ingredient ID
-  Ingredients
+	Recipe_id	integer	  
+  Title	string	  
+  Category	integer	  
+  Tagline	string	  
+  Heat	integer	  
+  Yield	float	  
+  Difficulty	integer	  
+  Prep_Time	integer	  
+  Rating	float	  
+  Votes	integer	  
+  Custom	text
 
-Joined Table
-  Recipe ID
-  Ingredient ID
+Image Table
+  Image_id	integer	  
+  Recipe	integer	  
+  Ingredient	integer	  
+  URL	string	  
+  Alt_Tag	text	  
+  Height	integer	  
+  Width	integer	  
+  Type	integer	  
+  Position	integer
+
+Ingredients Table
+	ingredients_id	integer	  
+  Ingredient	string
+
+Ingredients_Recipes_Join Table
+	IngRec_id	integer	  
+  Ingredient	integer	  
+  Recipe	integer
+
+Categories Table
+  Category_id	integer	  
+  Category	string
+
+Tags Table
+  Tag_id integer	  
+  Tag	string
+
+Tags_Recipe_Join
+	TagRecipe_id	integer	  
+  Recipe	integer	  
+  Tag	integer
+
+Instructions Table
+	Instruction_id	integer	  
+  Step Number	integer	  
+  Text	text	  
+  Recipe	integer
+
+Ingredients_Strings Table
+	IngredStr_id	integer	  
+  Text	text	  
+  Recipe	integer
