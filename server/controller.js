@@ -1,10 +1,22 @@
 const { db } = require('../database/index.js');
 
+const correctFormat = (str) => {
+  let newStr = str;
+  for (let n = 0; n < newStr.length; n++) {
+    if(newStr[n] ===`'`) {
+      let temp = newStr.slice(0,n) + `'` + newStr.slice(n)
+      newStr = temp
+      n++
+    }
+  }
+  return newStr;
+}
+
 const controller = {
   
   newTag: (req, res) => {
     let newTag = req.body.tag
-    db.query(`INSERT INTO tags(tag) VALUES('${newTag}') RETURNING *`)
+    db.query(`INSERT INTO tags(tag) VALUES('${correctFormat(newTag)}') RETURNING *`)
       .then((dbRes) => {
         res.status(200).send(dbRes)
       })
@@ -27,7 +39,7 @@ const controller = {
 
   newCategory: (req, res) => {
     let newCategory = req.body.category
-    db.query(`INSERT INTO categories(category) VALUES('${newCategory}') RETURNING *`)
+    db.query(`INSERT INTO categories(category) VALUES('${correctFormat(newCategory)}') RETURNING *`)
       .then((dbRes) => {
         res.status(200).send(dbRes)
       })
@@ -50,10 +62,10 @@ const controller = {
 
     newIngredient: (req, res) => {
       let newIngredient = req.body
-      db.query(`INSERT INTO ingredients(ingredient) VALUES('${newIngredient.ingredient}') RETURNING *`)
+      db.query(`INSERT INTO ingredients(ingredient) VALUES('${correctFormat(newIngredient.ingredient)}') RETURNING *`)
         .then((dbRes) => {
           let imgNum = dbRes.rows[0].ingredient_id
-          db.query(`INSERT INTO images(ingredient, url, alt_tag, height, width) VALUES(${imgNum}, '${newIngredient.url}', '${newIngredient.altTag}', ${newIngredient.height}, ${newIngredient.width})`)
+          db.query(`INSERT INTO images(ingredient, url, alt_tag, height, width) VALUES(${imgNum}, '${correctFormat(newIngredient.url)}', '${correctFormat(newIngredient.altTag)}', ${newIngredient.height}, ${newIngredient.width})`)
             .then((imgRes) => {
               let output = {ingredientResponse: dbRes, imageResponse: imgRes}
               res.status(200).send(output);
@@ -82,30 +94,15 @@ const controller = {
 
     newRecipe: (req, res) => {
       let data = req.body;
-      // {
-      //   recipeName: '',
-      //   tagLine: '',
-      //   recipeImages: [],
-      //   instructions: [],
-      //   ingredientsText: [],
-      //   category: '',
-      //   tags: [],
-      //   ingredients: [],
-      //   heat: '1',
-      //   yield: '',
-      //   difficulty: '1',
-      //   prepTime: '',
-      //   html: '',
-      // }
 
       db.query(`INSERT INTO recipes(title, category, tagline, heat, yield, difficulty, prep_time, custom) 
-      VALUES('${data.recipeName}', '${data.category}', '${data.tagLine}', ${data.heat}, ${data.yield}, ${data.difficulty}, ${data.prepTime}, '${data.html}') RETURNING *`)
+      VALUES('${correctFormat(data.recipeName)}', ${data.category}, '${correctFormat(data.tagLine)}', ${data.heat}, ${data.yield}, ${data.difficulty}, ${data.prepTime}, '${correctFormat(data.html)}') RETURNING *`)
         .then((recipeRes) => {
           let recipeNum = recipeRes.rows[0].recipe_id;
           let imagesValues = ''
           for (let i = 0; i < data.recipeImages.length; i++) {
             let image = data.recipeImages[i];
-            let temp = `(${recipeNum}, '${image.url}', '${image.altTag}', ${image.height}, ${image.width}, ${i === 0 ? 1 : 2}, ${i === 0 ? null : i}),`
+            let temp = `(${recipeNum}, '${correctFormat(image.url)}', '${correctFormat(image.altTag)}', ${image.height}, ${image.width}, ${i === 0 ? 1 : 2}, ${i === 0 ? null : i}),`
             imagesValues += temp;
           }
           imagesValues = imagesValues.slice(0, -1)
@@ -119,7 +116,7 @@ const controller = {
           let instructionsValues = ''
           for (let i = 0; i < data.instructions.length; i++) {
             let instruction = data.instructions[i];
-            let temp = `(${i + 1}, '${instruction.instruction}', ${recipeNum}),`
+            let temp = `(${i + 1}, '${correctFormat(instruction)}', ${recipeNum}),`
             instructionsValues += temp;
           }
           instructionsValues = instructionsValues.slice(0, -1)
@@ -133,7 +130,7 @@ const controller = {
           let ingredValues = '';
           for (let i = 0; i < data.ingredientsText.length; i++) {
             let ingredient = data.ingredientsText[i];
-            let temp = `('${ingredient}', ${recipeNum}),`
+            let temp = `('${correctFormat(ingredient)}', ${recipeNum}),`
             ingredValues += temp;
           }
           ingredValues = ingredValues.slice(0, -1);
@@ -177,6 +174,17 @@ const controller = {
         .catch((err) => {
           console.log(err);
           res.status(400).send(err)
+        })
+    },
+
+    getRecipes: (req, res) => {
+      db.query('SELECT * FROM recipes')
+        .then((recipes) => {
+          res.status(200).send(recipes);
+        })
+        .catch((err) => {
+          console.log(err);
+          res.status(400).send(err);
         })
     }
 }

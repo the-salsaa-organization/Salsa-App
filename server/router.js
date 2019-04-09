@@ -17,6 +17,9 @@ router
 router
   .route('/newRecipe')
   .post(controller.newRecipe);
+router
+  .route('/getRecipes')
+  .get(controller.getRecipes);
 
 
 module.exports = router;

@@ -217,22 +217,21 @@ class NewRecipe extends Component {
       .catch((err) => {
         console.log(err);
       })
-      // this.setState({
-      //   recipeName: '',
-      //   tagLine: '',
-      //   recipeImages: [],
-      //   instructions: [],
-      //   ingredientsText: [],
-      //   category: '',
-      //   tags: [],
-      //   ingredients: [],
-      //   heat: '1',
-      //   yield: '',
-      //   difficulty: '1',
-      //   prepTime: '',
-      //   html: '',
-      // })
-    e.preventDefault();
+      this.setState({
+        recipeName: '',
+        tagLine: '',
+        recipeImages: [],
+        instructions: [],
+        ingredientsText: [],
+        category: '',
+        tags: [],
+        ingredients: [],
+        heat: '1',
+        yield: '',
+        difficulty: '1',
+        prepTime: '',
+        html: '',
+      })
   }
 
   render() {

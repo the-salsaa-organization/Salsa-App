@@ -13,7 +13,7 @@ Recipe Table
   Votes	integer	  
   Custom	text
 
-Image Table
+Images Table
   Image_id	integer	  
   Recipe	integer	  
   Ingredient	integer	  
@@ -48,7 +48,7 @@ Tags_Recipe_Join
 
 Instructions Table
 	Instruction_id	integer	  
-  Step Number	integer	  
+  Step_Number	integer	  
   Text	text	  
   Recipe	integer
 

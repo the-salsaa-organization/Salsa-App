@@ -9,3 +9,7 @@
 .Header {
   border: 2px solid black;
 }
+
+.HeaderLink {
+  margin: 0 4px;
+}

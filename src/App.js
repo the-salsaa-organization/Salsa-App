@@ -1,38 +1,32 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import styles from './App.module.css';
-import Recipe from './Recipe.js';
-import Header from './Header.js';
+import Recipes from './BrowseRecipes/Recipes.js';
+import Header from './Header/Header.js';
 import NewRecipe from './AddRecipe/NewRecipe.js';
+import Recipe from './Recipe/Recipe.js';
 
 class App extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
-      PageType: 'Recipe',
-    }
-    this.displayRecipe = this.displayRecipe.bind(this);
-  }
-  displayRecipe() {
-    if (this.state.PageType === 'Recipe') {
-      this.setState({
-        PageType: 'Nothing'
-      })
-    } else {
-      this.setState({
-        PageType: 'Recipe'
-      })
+      target: '',
     }
   }
+
   render() {
+    console.log('location from App: ', this.props.location)
     return (
-      
-      <div className={styles.App}>
-        <Header currentPage = {this.state.PageType}/>
-        <button onClick = {this.displayRecipe}>showRecipe</button>
-        {this.state.PageType === 'Recipe' ? <Recipe/> : null}
-        {this.state.PageType === 'Nothing' ? <p>fuck nick</p> : null}
-        <NewRecipe/>
-      </div>
+      <Router>
+        <div className={styles.App}>
+          <Header currentPage = {this.state.PageType} location = {this.props.location}/>
+          <Switch>
+            <Route path = '/recipes' exact component = {Recipes}/>
+            <Route path = '/recipes/:recipeTitle' component = {Recipe}/>
+            <Route path = '/addrecipe' component = {NewRecipe}/>
+          </Switch>
+        </div>
+      </Router>
     );
   }
 }
