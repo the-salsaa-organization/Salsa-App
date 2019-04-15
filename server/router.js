@@ -20,6 +20,9 @@ router
 router
   .route('/getRecipes')
   .get(controller.getRecipes);
+router
+  .route('/populateRecipe/:title')
+  .get(controller.populateRecipe);
 
 
 module.exports = router;

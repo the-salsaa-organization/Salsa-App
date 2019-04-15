@@ -15,7 +15,6 @@ class App extends Component {
   }
 
   render() {
-    console.log('location from App: ', this.props.location)
     return (
       <Router>
         <div className={styles.App}>

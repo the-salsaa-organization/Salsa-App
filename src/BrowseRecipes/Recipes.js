@@ -23,7 +23,6 @@ class Recipes extends Component {
   }
 
   render() {
-    console.log('location from Recipes: ', this.props.location);
     return (
       <div>
         {this.state.recipes.map((recipe, i) => {

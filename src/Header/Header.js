@@ -11,7 +11,6 @@ class Header extends Component {
   }
 
   render() {
-    console.log('location from header: ', this.props.location);
     return (
       <div className={`${styles.Header} ${styles[this.props.currentPage]}`}>
         <Link className = {styles.HeaderLink} to = '/addrecipe' >Add Recipe</Link>

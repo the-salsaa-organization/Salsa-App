@@ -62,7 +62,7 @@ const controller = {
 
     newIngredient: (req, res) => {
       let newIngredient = req.body
-      db.query(`INSERT INTO ingredients(ingredient) VALUES('${correctFormat(newIngredient.ingredient)}') RETURNING *`)
+      db.query(`INSERT INTO ingredients(ingredient_name) VALUES('${correctFormat(newIngredient.ingredient)}') RETURNING *`)
         .then((dbRes) => {
           let imgNum = dbRes.rows[0].ingredient_id
           db.query(`INSERT INTO images(ingredient, url, alt_tag, height, width) VALUES(${imgNum}, '${correctFormat(newIngredient.url)}', '${correctFormat(newIngredient.altTag)}', ${newIngredient.height}, ${newIngredient.width})`)
@@ -181,6 +181,93 @@ const controller = {
       db.query('SELECT * FROM recipes')
         .then((recipes) => {
           res.status(200).send(recipes);
+        })
+        .catch((err) => {
+          console.log(err);
+          res.status(400).send(err);
+        })
+    },
+
+    populateRecipe: (req, res) => {
+      let data = {
+        recipe: null,
+        recipeImages: null,
+        ingredients: null,
+        ingredientsText: null,
+        instructions: null,
+        tags: null,
+      };
+
+      const complete = () => {
+        let check = true;
+        for (key in data) {
+          if (data[key] === null) {
+            check = false;
+            break;
+          }
+        }
+        if (check) {
+          res.status(200).send(data);
+        }
+      };
+
+      db.query(`SELECT * FROM recipes LEFT JOIN categories ON recipes.category = categories.category_id WHERE title = '${correctFormat(req.params.title)}'`)
+        .then((recipe) => {
+          let recipeId = recipe.rows[0].recipe_id
+          data.recipe = recipe.rows;
+          db.query(`SELECT * FROM images WHERE recipe = ${recipeId}`)
+            .then((images) => {
+              data.recipeImages = images.rows
+              complete();
+            })
+            .catch((err) => {
+              console.log('images query error: ', err);
+              res.status(400).send(err);
+            });
+          db.query(`SELECT * FROM ingredients_recipes_join 
+            LEFT OUTER JOIN ingredients 
+            ON ingredients_recipes_join.ingredient = ingredients.ingredient_id 
+            LEFT OUTER JOIN images 
+            ON images.ingredient = ingredients.ingredient_id
+            WHERE ingredients_recipes_join.recipe = ${recipeId}`)
+            .then((ingredients) => {
+              data.ingredients = ingredients.rows;
+              complete();
+            })
+            .catch((err) => {
+              console.log('ingredients query error: ', err);
+              res.status(400).send(err);
+            });
+          db.query(`SELECT * FROM ingredients_strings LEFT JOIN recipes ON ingredients_strings.recipe = recipes.recipe_id WHERE recipe = ${recipeId}`)
+            .then((ingredStr) => {
+              data.ingredientsText = ingredStr.rows;
+              complete();
+            })
+            .catch((err) => {
+              console.log('ingredients_strings query error: ', err);
+              res.status(400).send(err);
+            })
+          db.query(`SELECT * FROM instructions WHERE recipe = ${recipeId}`)
+            .then((instructions) => {
+              data.instructions = instructions.rows;
+              complete();
+            })
+            .catch((err) => {
+              console.log('instructions query error: ', err);
+              res.status(400).send(err);
+            })
+          db.query(`SELECT * FROM tags_recipe_join 
+            LEFT OUTER JOIN tags 
+            ON tags_recipe_join.tag = tags.tag_id 
+            WHERE tags_recipe_join.recipe = ${recipeId}`)
+            .then((tags) => {
+              data.tags = tags.rows;
+              complete();
+            })
+            .catch((err) => {
+              console.log('tags query error: ', err);
+              res.status(400).send(err);
+            });
         })
         .catch((err) => {
           console.log(err);

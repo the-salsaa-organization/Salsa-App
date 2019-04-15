@@ -26,7 +26,7 @@ Images Table
 
 Ingredients Table
 	ingredients_id	integer	  
-  Ingredient	string
+  Ingredient_name	string
 
 Ingredients_Recipes_Join Table
 	IngRec_id	integer	  
