@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {Link} from 'react-router-dom';
 import axios from 'axios';
 
 
@@ -53,7 +54,7 @@ class Recipe extends Component {
   render() {
     return (
       <div>
-        <div>Recipes > {this.state.category} > {this.state.title}</div>
+        <div><Link to = '/recipes'>Recipes</Link> > <Link to = {`/categories/${this.state.category}`}>{this.state.category}</Link> > {this.state.title}</div>
         <header>{this.state.title}</header>
         <p>{this.state.tagline}</p>
         {this.state.votes === null ? 
@@ -74,6 +75,10 @@ class Recipe extends Component {
         <header>Instructions</header>
         {this.state.instructions.map((instruction, i) => {
           return <p key = {i}>{instruction.step_number}: {instruction.text}</p>
+        })}
+        <header>Tags</header>
+        {this.state.tags.map((tag, i) => {
+          return <button key = {i}>{tag.tag}</button>
         })}
       </div>
     )
